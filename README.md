@@ -17,5 +17,5 @@ CenterDiff.jl is a Julia module for performing central difference on multi-dimen
 CenterDiff.jl can not be installed with the Julia package manager. From the Julia REPL, type `]` to
 enter the Pkg REPL mode and run:
 ```
-pkg> add git@github.com:0samuraiE/CenterDiff.jl.git
+pkg> add https://github.com/0samuraiE/CenterDiff.jl.git
 ```
