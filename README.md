@@ -26,9 +26,9 @@ julia> using CenterDiff
 
 julia> f(x) = x^2;
 
-julia> f̄c(Order(4), f.(1:4)) # The analytical solution is 2.5^2=6.25
+julia> fc(Order(4), f.(1:4)) # The analytical solution is 2.5^2=6.25
 6.25
-julia> f̄c(Order(4), f.(1:4), XAxis(), CartesianIndex(div(4, 2))) # equivalent
+julia> fc(Order(4), f.(1:4), XAxis(), CartesianIndex(div(4, 2))) # equivalent
 6.25
 
 julia> dfdxc(Order(6), f.(1:6), 1) # The analytical solution is 2*3.5=7.0
@@ -73,7 +73,7 @@ julia> g̃((x, y, z)) = sin(x) * sin(y) * sin(z);
        I0 = CartesianIndex(8, 8, 8);
        x0, y0, z0 = MESH[I0];
 
-julia> f̄c(Order(2), G, XAxis(), I0) - g̃((x0+dx/2, y0, z0))
+julia> fc(Order(2), G, XAxis(), I0) - g̃((x0+dx/2, y0, z0))
 -0.0003493436613384304
 
 julia> dfdxc(Order(4), G, dyi, YAxis(), I0) - dg̃dy((x0, y0+dy/2, z0))

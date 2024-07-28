@@ -10,7 +10,7 @@ using Test
         d2f̃dx(x) = exp(x)
         x0 = 1.0
 
-        order = countorder(2, 1, 1 / 2) do h
+        order = CenterDiff.countorder(2, 1, 1 / 2) do h
             X1 = _centered_coords(x0, h, O)
             Y1 = f̃.(X1)
 
@@ -18,13 +18,13 @@ using Test
             Y2 = f̃.(X2)
 
             (;
-                f̄c=f̃(x0) - f̄c(Order(O), Y1),
+                fc=f̃(x0) - fc(Order(O), Y1),
                 dfdxc=df̃dx(x0) - dfdxc(Order(O), Y1, 1 / h),
                 dfdx=df̃dx(x0) - dfdx(Order(O), Y2, 1 / h),
                 d2fdx=d2f̃dx(x0) - d2fdx(Order(O), Y2, 1 / h),
             )
         end
-        @test all(order.f̄c .> O)
+        @test all(order.fc .> O)
         @test all(order.dfdxc .> O)
         @test all(order.dfdx .> O)
         @test all(order.d2fdx .> O)
@@ -36,7 +36,7 @@ using Test
         d2f̃dx(x) = exp(x)
         x0 = 1.0
 
-        order = countorder(2, 1, 1 / 2) do h
+        order = CenterDiff.countorder(2, 1, 1 / 2) do h
             X = _centered_coords(x0, h, O + 1)
             Y = f̃.(X)
 
