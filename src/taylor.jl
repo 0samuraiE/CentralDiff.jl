@@ -85,8 +85,8 @@ fc(order, F, axis, ::Backward, I) = fc(order, F, axis, I - dI(axis, 1))
 Compute first derivative of order N along axis at i+1/2 (default, forward) or i-1/2 (backward).
 """
 dfdxc(O::Order{N}, F, dxi) where {N} = dfdxc(O, F, dxi, XAxis(), CartesianIndex(div(N, 2)))
-dfdxc(order, F, axis, ::Forward, I) = dfdxc(order, F, dxi, axis, I)
-dfdxc(order, F, axis, ::Backward, I) = dfdxc(order, F, dxi, axis, I - dI(axis, 1))
+dfdxc(order, F, dxi, axis, ::Forward, I) = dfdxc(order, F, dxi, axis, I)
+dfdxc(order, F, dxi, axis, ::Backward, I) = dfdxc(order, F, dxi, axis, I - dI(axis, 1))
 
 """
     dfdx(order, F, dxi)
