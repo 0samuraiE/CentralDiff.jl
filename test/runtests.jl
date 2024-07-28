@@ -1,4 +1,4 @@
-using CentralDiff, CentralDiff.Morinishi
+using CentralDiff, CentralDiff.Operators
 using Test
 
 _centered_coords(x0, h, N) = @. x0 + h * ((1-N)//2:(N-1)//2)
@@ -52,7 +52,7 @@ end
     end
 end
 
-@testset "Morinishi" begin
+@testset "Operators" begin
     f(x) = x
     X = 1:64
     F = f.(X)

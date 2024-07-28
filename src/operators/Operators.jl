@@ -1,8 +1,4 @@
-# Y. Morinishi, T.S. Lund, O.V. Vasilyev, P. Moin,
-# Fully Conservative Higher Order Finite Difference Schemes for Incompressible Flow,
-# Journal of Computational Physics, Volume 143, Issue 1, 1998, Pages 90-124,
-
-module Morinishi
+module Operators
 export f̄n, δfδxn
 using ..CentralDiff
 
