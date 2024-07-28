@@ -68,41 +68,41 @@ struct Backward <: AbstractDifference end
 
 """
     fc(order, F)
-    fc(order, F, axis, I)
-    fc(order, F, axis, diff, I)
+    fc(order, axis, F, I)
+    fc(order, axis, diff, F, I)
 
 Compute interpolation of order N along axis at i+1/2 (default, forward) or i-1/2 (backward).
 """
-fc(O::Order{N}, F) where {N} = fc(O, F, XAxis(), CartesianIndex(div(N, 2)))
-fc(order, F, axis, ::Forward, I) = fc(order, F, axis, I)
-fc(order, F, axis, ::Backward, I) = fc(order, F, axis, I - dI(axis, 1))
+fc(O::Order{N}, F) where {N} = fc(O, XAxis(), F, CartesianIndex(div(N, 2)))
+fc(order, axis, ::Forward, F, I) = fc(order, F, axis, I)
+fc(order, axis, ::Backward, F, I) = fc(order, F, axis, I - dI(axis, 1))
 
 """
     dfdxc(order, F, dxi)
-    dfdxc(order, F, dxi, axis, I)
-    dfdxc(order, F, dxi, axis, diff, I)
+    dfdxc(order, axis, F, I, dxi)
+    dfdxc(order, axis, diff, F, I, dxi)
 
 Compute first derivative of order N along axis at i+1/2 (default, forward) or i-1/2 (backward).
 """
-dfdxc(O::Order{N}, F, dxi) where {N} = dfdxc(O, F, dxi, XAxis(), CartesianIndex(div(N, 2)))
-dfdxc(order, F, dxi, axis, ::Forward, I) = dfdxc(order, F, dxi, axis, I)
-dfdxc(order, F, dxi, axis, ::Backward, I) = dfdxc(order, F, dxi, axis, I - dI(axis, 1))
+dfdxc(O::Order{N}, F, dxi) where {N} = dfdxc(O, XAxis(), F, CartesianIndex(div(N, 2)), dxi)
+dfdxc(order, axis, ::Forward, F, I, dxi) = dfdxc(order, axis, F, I, dxi)
+dfdxc(order, axis, ::Backward, F, I, dxi) = dfdxc(order, axis, F, I - dI(axis, 1), dxi)
 
 """
     dfdx(order, F, dxi)
-    dfdx(order, F, dxi, axis, I)
+    dfdx(order, axis, F, I, dxi)
 
 Compute first derivative of order N along axis at i.
 """
-dfdx(O::Order{N}, F, dxi) where {N} = dfdx(O, F, dxi, XAxis(), CartesianIndex(N))
+dfdx(O::Order{N}, F, dxi) where {N} = dfdx(O, XAxis(), F, CartesianIndex(N), dxi)
 
 """
     d2fdx(order, F, dxi)
-    d2fdx(order, F, dxi, axis, I)
+    d2fdx(order, axis, F, I, dxi)
 
 Compute second derivative of order N along axis at i.
 """
-d2fdx(O::Order{N}, F, dxi) where {N} = d2fdx(O, F, dxi, XAxis(), CartesianIndex(N))
+d2fdx(O::Order{N}, F, dxi) where {N} = d2fdx(O, XAxis(), F, CartesianIndex(N), dxi)
 
 for N in (2, 4, 6, 8, 10, 12, 14, 16, 18, 20)
     samples = Rational{BigInt}.((1-N)//2:(N-1)//2)
@@ -110,19 +110,19 @@ for N in (2, 4, 6, 8, 10, 12, 14, 16, 18, 20)
     Ai = inv(A)
 
     @eval begin
-        @inline function fc(::Order{$N}, F, axis, I)
+        @inline function fc(::Order{$N}, axis, F, I)
             $(Expr(:call, :+, _generate_terms(@view(Ai[1, :]))...))
         end
 
-        @inline function dfdxc(::Order{$N}, F, dxi, axis, I)
+        @inline function dfdxc(::Order{$N}, axis, F, I, dxi)
             $(Expr(:call, :+, _generate_terms(@view(Ai[2, :]))...)) * dxi
         end
 
-        @inline function dfdx(::Order{$N}, F, dxi, axis, I)
+        @inline function dfdx(::Order{$N}, axis, F, I, dxi)
             $(Expr(:call, :+, _generate_terms(@views(_shift_and_add(Ai[1, :], Ai[2, :])))...)) * dxi
         end
 
-        @inline function d2fdx(::Order{$N}, F, dxi, axis, I)
+        @inline function d2fdx(::Order{$N}, axis, F, I, dxi)
             $(Expr(:call, :+, _generate_terms(@views(_shift_and_add(Ai[2, :], Ai[2, :])))...)) * dxi^2
         end
     end

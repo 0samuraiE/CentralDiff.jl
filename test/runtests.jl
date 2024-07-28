@@ -1,9 +1,9 @@
-using CentralDiff
+using CentralDiff, CentralDiff.Morinishi
 using Test
 
-@testset "CentralDiff.jl" begin
-    _centered_coords(x0, h, N) = @. x0 + h * ((1-N)//2:(N-1)//2)
+_centered_coords(x0, h, N) = @. x0 + h * ((1-N)//2:(N-1)//2)
 
+@testset "Precise" begin
     for O in (2, 4, 6, 8, 10, 12, 14, 16, 18, 20)
         f̃(x) = exp(x)
         df̃dx(x) = exp(x)
@@ -29,7 +29,9 @@ using Test
         @test all(order.dfdx .> O)
         @test all(order.d2fdx .> O)
     end
+end
 
+@testset "Simple" begin
     for O in (2, 4, 6, 8, 10, 12, 14, 16, 18, 20)
         f̃(x) = exp(x)
         df̃dx(x) = exp(x)
@@ -47,5 +49,23 @@ using Test
         end
         @test all(order.dfdx .> O)
         @test all(order.d2fdx .> O)
+    end
+end
+
+@testset "Morinishi" begin
+    f(x) = x
+    X = 1:64
+    F = f.(X)
+    dx = step(X)
+    dxi = 1 / dx
+
+    I0 = CartesianIndex(32)
+    for n in 1:2:19
+        @test eval(Symbol(:f̄, n))(XAxis(), F, I0) ≈ f(X[I0] + dx / 2)
+        @test eval(Symbol(:f̄, n))(XAxis(), Backward(), F, I0) ≈ f(X[I0] - dx / 2)
+        @test eval(Symbol(:f̄, n))(XAxis(), Forward(), F, I0) ≈ f(X[I0] + dx / 2)
+        @test eval(Symbol(:δfδx, n))(XAxis(), F, I0, dxi) ≈ 1
+        @test eval(Symbol(:δfδx, n))(XAxis(), Backward(), F, I0, dxi) ≈ 1
+        @test eval(Symbol(:δfδx, n))(XAxis(), Forward(), F, I0, dxi) ≈ 1
     end
 end
