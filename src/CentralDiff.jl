@@ -1,6 +1,8 @@
 module CentralDiff
-export Axis, XAxis, YAxis, ZAxis, dI, Order
-export TaylorMatrix, fc, dfdxc, dfdx, d2fdx, Simple, Morinishi
+export AbstractAxis, XAxis, YAxis, ZAxis, dI
+export Order, AbstractDifference, Forward, Backward
+export TaylorMatrix, fc, dfdxc, dfdx, d2fdx
+export Simple, Morinishi
 
 include("di.jl")
 include("taylor.jl")
