@@ -10,5 +10,5 @@ Documentation for [CentralDiff](https://github.com/0samuraiE/CentralDiff.jl).
 ```
 
 ```@autodocs
-Modules = [CentralDiff, CentralDiff.Morinishi, CentralDiff.Simple]
+Modules = [CentralDiff, CentralDiff.Operators, CentralDiff.Simple]
 ```
