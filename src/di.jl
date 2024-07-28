@@ -1,3 +1,5 @@
+import Base: +, -
+
 """
     AbstractAxis
 
@@ -10,15 +12,9 @@ struct YAxis <: AbstractAxis end
 struct ZAxis <: AbstractAxis end
 
 """
-    dI{T<:AbstractAxis}
+    dI{T<:AbstractAxis}(axis, stride)
 
-A structure representing movement along an axis.
-
-Fields:
-- `axis::T`: The axis along which movement occurs
-- `stride::Int`: The amount of movement (stride)
-
-`T` must be a subtype of `AbstractAxis`.
+Represent a displacement along a specific axis.
 
 # Examples
 ```jldoctest

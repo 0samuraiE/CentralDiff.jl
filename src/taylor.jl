@@ -1,20 +1,8 @@
 """
     TaylorMatrix(samples)
 
-Construct a Taylor matrix from the given samples.
-
-# Arguments
-- `samples`: A vector of sample points.
-
-# Returns
-A matrix where each element (i,j) is calculated as i^j / j!, 
-where i is a sample point and j ranges from 0 to (length(samples) - 1).
-
-# Description
-This function creates a matrix based on the Taylor series expansion. 
-Each row corresponds to a sample point, and each column represents 
-a term in the Taylor series up to the (n-1)th derivative, where n is 
-the number of samples.
+Construct a Taylor matrix from the given sample points.
+Returns a matrix where element (i,j) is i^j / j!.
 
 # Example
 ```julia-repl
@@ -38,36 +26,10 @@ function TaylorMatrix(samples)
 end
 
 """
-Generate a list of expressions representing terms for computing approximations or derivatives.
+    _generate_terms(C)
 
-# Arguments
-- `C`: A vector of coefficients.
-
-# Returns
-A vector of expressions, each representing a term.
-
-# Details
-This function creates expressions for each term. 
-It uses the coefficients in `C` to create terms that will later be summed.
-
-Each term is of the form: `coefficient * F[I + dI(axis, offset)]`
-where:
-- `coefficient` is an element from `C`
-- `F` is assumed to be the array being computed
-- `I` is assumed to be the current index
-- `axis` is assumed to be defined in the context where this function is called
-- `offset` is calculated based on the position of the coefficient in `C`
-
-# Examples
-```julia-repl
-julia> C = [1.0, 2.0, 1.0];
-
-julia> terms = _generate_terms(C)
-3-element Vector{Expr}:
- :(1.0 * F[I + dI(axis, -1)])
- :(2.0 * F[I + dI(axis, 0)])
- :(1.0 * F[I + dI(axis, 1)])
-```
+Generate expressions for finite difference or interpolation terms.
+Returns a vector of expressions based on coefficient vector C.
 """
 function _generate_terms(C)
     N = length(C)
@@ -77,18 +39,8 @@ end
 """
     _shift_and_add(C1, C2)
 
-Perform a convolution-like operation on two coefficient vectors.
-
-# Arguments
-- `C1`: First vector of coefficients.
-- `C2`: Second vector of coefficients.
-
-# Returns
-A vector containing the result of the shift-and-add operation.
-
-# Description
-This function performs a discrete convolution-like operation on two input vectors. 
-It is particularly useful for combining finite difference coefficients or stencils.
+Compute the convolution of two coefficient vectors C1 and C2.
+Returns a vector of length 2N-1, where N is the length of C1 and C2.
 """
 function _shift_and_add(C1, C2)
     N = length(C1)
@@ -101,101 +53,54 @@ function _shift_and_add(C1, C2)
 end
 
 """
-    Order{N}
+    Order{N}()
+    Order(N)
 
-A type representing the order of a numerical method or approximation.
-
-# Type Parameters
-- `N`: An integer constant representing the order.
+Represent the order of a numerical method.
+N is an integer constant specifying the order.
 """
 struct Order{N} end
 Order(N) = Order{N}()
 
+abstract type AbstractDifference end
+struct Forward <: AbstractDifference end
+struct Backward <: AbstractDifference end
+
 """
-    fc(O::Order{N}, F) where {N}
-    fc(O::Order{N}, F, axis::AbstractAxis, I::CartesianIndex) where {N}
+    fc(order, F)
+    fc(order, F, axis, I)
+    fc(order, F, axis, diff, I)
 
-Compute the centered interpolation at i+1/2 for the given order and data.
-
-# Arguments
-- `O::Order{N}`: Order of the interpolation.
-- `F`: Data array to interpolate.
-- `axis::AbstractAxis`: Axis along which to perform the interpolation (default: `XAxis()`).
-- `I::CartesianIndex`: Base index for the operation (default: `CartesianIndex(div(N, 2))`).
-
-# Returns
-The interpolated value at the i+1/2 position.
-
-# Description
-This function computes a centered interpolation at the midpoint between grid points (i+1/2) 
-for the given order `N`. The 'c' in the function name indicates that it's a centered operation at i+1/2.
+Compute interpolation of order N along axis at i+1/2 (default, forward) or i-1/2 (backward).
 """
 fc(O::Order{N}, F) where {N} = fc(O, F, XAxis(), CartesianIndex(div(N, 2)))
+fc(order, F, axis, ::Forward, I) = fc(order, F, axis, I)
+fc(order, F, axis, ::Backward, I) = fc(order, F, axis, I - dI(axis, 1))
 
 """
-    dfdxc(O::Order{N}, F, dxi) where {N}
-    dfdxc(O::Order{N}, F, dxi, axis::AbstractAxis, I::CartesianIndex) where {N}
+    dfdxc(order, F, dxi)
+    dfdxc(order, F, dxi, axis, I)
+    dfdxc(order, F, dxi, axis, diff, I)
 
-Compute the centered first derivative at i+1/2 for the given order and data.
-
-# Arguments
-- `O::Order{N}`: Order of the derivative approximation.
-- `F`: Data array to differentiate.
-- `dxi`: Grid spacing or the reciprocal of Δx.
-- `axis::AbstractAxis`: Axis along which to perform the differentiation (default: `XAxis()`).
-- `I::CartesianIndex`: Base index for the operation (default: `CartesianIndex(div(N, 2))`).
-
-# Returns
-The approximated first derivative at the i+1/2 position.
-
-# Description
-This function computes a centered finite difference approximation of the first derivative 
-at the midpoint between grid points (i+1/2) for the given order `N`. The 'c' in the 
-function name indicates that it's a centered operation at i+1/2.
+Compute first derivative of order N along axis at i+1/2 (default, forward) or i-1/2 (backward).
 """
 dfdxc(O::Order{N}, F, dxi) where {N} = dfdxc(O, F, dxi, XAxis(), CartesianIndex(div(N, 2)))
+dfdxc(order, F, axis, ::Forward, I) = dfdxc(order, F, dxi, axis, I)
+dfdxc(order, F, axis, ::Backward, I) = dfdxc(order, F, dxi, axis, I - dI(axis, 1))
 
 """
-    dfdx(O::Order{N}, F, dxi) where {N}
-    dfdx(O::Order{N}, F, dxi, axis::AbstractAxis, I::CartesianIndex) where {N}
+    dfdx(order, F, dxi)
+    dfdx(order, F, dxi, axis, I)
 
-Compute the centered first derivative at i for the given order and data.
-
-# Arguments
-- `O::Order{N}`: Order of the derivative approximation.
-- `F`: Data array to differentiate.
-- `dxi`: Grid spacing or the reciprocal of Δx.
-- `axis::AbstractAxis`: Axis along which to perform the differentiation (default: `XAxis()`).
-- `I::CartesianIndex`: Base index for the operation (default: `CartesianIndex(N)`).
-
-# Returns
-The approximated first derivative at the i position.
-
-# Description
-This function computes a centered finite difference approximation of the first derivative 
-at the grid points (i) for the given order `N`.
+Compute first derivative of order N along axis at i.
 """
 dfdx(O::Order{N}, F, dxi) where {N} = dfdx(O, F, dxi, XAxis(), CartesianIndex(N))
 
 """
-    d2fdx(O::Order{N}, F, dxi) where {N}
-    d2fdx(O::Order{N}, F, dxi, axis::AbstractAxis, I::CartesianIndex) where {N}
+    d2fdx(order, F, dxi)
+    d2fdx(order, F, dxi, axis, I)
 
-Compute the centered second derivative at i for the given order and data.
-
-# Arguments
-- `O::Order{N}`: Order of the derivative approximation.
-- `F`: Data array to differentiate.
-- `dxi`: Grid spacing or the reciprocal of Δx.
-- `axis::AbstractAxis`: Axis along which to perform the differentiation (default: `XAxis()`).
-- `I::CartesianIndex`: Base index for the operation (default: `CartesianIndex(N)`).
-
-# Returns
-The approximated second derivative at the i position.
-
-# Description
-This function computes a centered finite difference approximation of the second derivative 
-at the grid points (i) for the given order `N`.
+Compute second derivative of order N along axis at i.
 """
 d2fdx(O::Order{N}, F, dxi) where {N} = d2fdx(O, F, dxi, XAxis(), CartesianIndex(N))
 

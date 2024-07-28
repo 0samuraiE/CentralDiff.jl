@@ -14,7 +14,7 @@ CenterDiff.jl is a Julia module for performing central difference on multi-dimen
 
 ## Installation
 
-CenterDiff.jl can not be installed with the Julia package manager. From the Julia REPL, type `]` to
+CenterDiff.jl can be installed with the Julia package manager. From the Julia REPL, type `]` to
 enter the Pkg REPL mode and run:
 ```
 pkg> add https://github.com/0samuraiE/CenterDiff.jl.git
@@ -85,9 +85,9 @@ julia> dfdx(Order(6), G, dzi, ZAxis(), I0) - dg̃dy((x0, y0, z0))
 julia> d2fdx(Order(8), G, dzi, ZAxis(), I0) - d2g̃dz((x0, y0, z0))
 6.298850330210826e-13
 
-julia> Simple.dfdx(Order(10), G, dxi, XAxis(), I0) - dg̃dy((x0, y0, z0))
+julia> Simple.dfdx(Order(10), G, dxi, XAxis(), I0) - dg̃dx((x0, y0, z0))
 -1.1435297153639112e-14
 
-julia> Simple.d2fdx(Order(12), G, dxi, XAxis(), I0) - d2g̃dz((x0, y0, z0))
+julia> Simple.d2fdx(Order(12), G, dxi, XAxis(), I0) - d2g̃dx((x0, y0, z0))
 -1.27675647831893e-15
 ```
