@@ -24,10 +24,10 @@ using Test
                 d2fdx=d2f̃dx(x0) - d2fdx(Order(O), Y2, 1 / h),
             )
         end
-        all(order.f̄c .> O)
-        all(order.dfdxc .> O)
-        all(order.dfdx .> O)
-        all(order.d2fdx .> O)
+        @test all(order.f̄c .> O)
+        @test all(order.dfdxc .> O)
+        @test all(order.dfdx .> O)
+        @test all(order.d2fdx .> O)
     end
 
     for O in (2, 4, 6, 8, 10, 12, 14, 16, 18, 20)
@@ -45,7 +45,7 @@ using Test
                 d2fdx=d2f̃dx(x0) - Simple.d2fdx(Order(O), Y, 1 / h),
             )
         end
-        all(order.dfdx .> O)
-        all(order.d2fdx .> O)
+        @test all(order.dfdx .> O)
+        @test all(order.d2fdx .> O)
     end
 end
