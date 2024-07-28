@@ -1,7 +1,7 @@
 module Simple
 export dfdx, d2fdx
-using ..CenterDiff
-using ..CenterDiff: _generate_terms
+using ..CentralDiff
+using ..CentralDiff: _generate_terms
 
 @inline dfdx(O::Order{N}, F, dxi) where {N} = dfdx(O, F, dxi, XAxis(), CartesianIndex(div(N, 2) + 1))
 @inline d2fdx(O::Order{N}, F, dxi) where {N} = d2fdx(O, F, dxi, XAxis(), CartesianIndex(div(N, 2) + 1))

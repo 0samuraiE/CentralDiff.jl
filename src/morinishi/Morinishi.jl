@@ -4,7 +4,7 @@
 
 module Morinishi
 export f̄n, δfδxn
-using ..CenterDiff
+using ..CentralDiff
 
 """
     f̄n(n, F, axis, I)

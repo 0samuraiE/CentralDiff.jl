@@ -1,10 +1,10 @@
-# CenterDiff.jl
+# CentralDiff.jl
 
 *Central difference in Julia*
 
-[![Build Status](https://github.com/0samuraiE/CenterDiff.jl/actions/workflows/CI.yml/badge.svg?branch=master)](https://github.com/0samuraiE/CenterDiff.jl/actions/workflows/CI.yml?query=branch%3Amaster)
+[![Build Status](https://github.com/0samuraiE/CentralDiff.jl/actions/workflows/CI.yml/badge.svg?branch=master)](https://github.com/0samuraiE/CentralDiff.jl/actions/workflows/CI.yml?query=branch%3Amaster)
 
-CenterDiff.jl is a Julia module for performing central difference on multi-dimensional data. It provides tools to compute numerical derivatives and supports higher-order finite differences.
+CentralDiff.jl is a Julia module for performing central difference on multi-dimensional data. It provides tools to compute numerical derivatives and supports higher-order finite differences.
 
 ## Features
 
@@ -14,15 +14,15 @@ CenterDiff.jl is a Julia module for performing central difference on multi-dimen
 
 ## Installation
 
-CenterDiff.jl can be installed with the Julia package manager. From the Julia REPL, type `]` to
+CentralDiff.jl can be installed with the Julia package manager. From the Julia REPL, type `]` to
 enter the Pkg REPL mode and run:
 ```
-pkg> add https://github.com/0samuraiE/CenterDiff.jl.git
+pkg> add https://github.com/0samuraiE/CentralDiff.jl.git
 ```
 
 ## Usage
 ```julia
-julia> using CenterDiff
+julia> using CentralDiff
 
 julia> f(x) = x^2;
 

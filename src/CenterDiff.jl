@@ -1,4 +1,4 @@
-module CenterDiff
+module CentralDiff
 export Axis, XAxis, YAxis, ZAxis, dI, Order
 export TaylorMatrix, fc, dfdxc, dfdx, d2fdx, Simple, Morinishi
 

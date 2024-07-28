@@ -1,7 +1,7 @@
-using CenterDiff
+using CentralDiff
 using Test
 
-@testset "CenterDiff.jl" begin
+@testset "CentralDiff.jl" begin
     _centered_coords(x0, h, N) = @. x0 + h * ((1-N)//2:(N-1)//2)
 
     for O in (2, 4, 6, 8, 10, 12, 14, 16, 18, 20)
@@ -10,7 +10,7 @@ using Test
         d2f̃dx(x) = exp(x)
         x0 = 1.0
 
-        order = CenterDiff.countorder(2, 1, 1 / 2) do h
+        order = CentralDiff.countorder(2, 1, 1 / 2) do h
             X1 = _centered_coords(x0, h, O)
             Y1 = f̃.(X1)
 
@@ -36,7 +36,7 @@ using Test
         d2f̃dx(x) = exp(x)
         x0 = 1.0
 
-        order = CenterDiff.countorder(2, 1, 1 / 2) do h
+        order = CentralDiff.countorder(2, 1, 1 / 2) do h
             X = _centered_coords(x0, h, O + 1)
             Y = f̃.(X)
 

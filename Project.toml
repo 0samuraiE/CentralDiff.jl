@@ -1,4 +1,4 @@
-name = "CenterDiff"
+name = "CentralDiff"
 uuid = "ee584bdc-bcf2-4efd-9b7f-ff61c680caa8"
 authors = ["Taketo Tominaga"]
 version = "1.0.0-DEV"
