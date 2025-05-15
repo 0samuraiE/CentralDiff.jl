@@ -2,7 +2,7 @@
 
 *Central difference in Julia*
 
-[![Stable](https://img.shields.io/badge/docs-stable-blue.svg)](https://0samuraiE.github.io/CentralDiff.jl/stable/)
+[![Stable](https://img.shields.io/badge/docs-stable-blue.svg)](https://0samuraiE.github.io/CentralDiff.jl/dev/)
 [![Dev](https://img.shields.io/badge/docs-dev-blue.svg)](https://0samuraiE.github.io/CentralDiff.jl/dev/)
 [![Build Status](https://github.com/0samuraiE/CentralDiff.jl/actions/workflows/CI.yml/badge.svg?branch=master)](https://github.com/0samuraiE/CentralDiff.jl/actions/workflows/CI.yml?query=branch%3Amaster)
 [![Coverage](https://codecov.io/gh/0samuraiE/CentralDiff.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/0samuraiE/CentralDiff.jl)
